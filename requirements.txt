@@ -1,5 +1,6 @@
-tensorflow
+tensorflow==2.17.0
 numpy
 opencv-python-headless
 Pillow
 streamlit
+huggingface_hub

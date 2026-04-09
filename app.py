@@ -1,8 +1,10 @@
+import os
 import streamlit as st
 import numpy as np
 import cv2
 from PIL import Image
 import tensorflow as tf
+from huggingface_hub import hf_hub_download
 
 st.set_page_config(page_title="Emotion Detector", page_icon="😊", layout="centered")
 
@@ -20,10 +22,17 @@ EMOTION_COLORS = {
     'Surprise': '🟣',
 }
 
+HF_REPO_ID = "mathursuchit/emotion-detection"
+HF_FILENAME = "Final_Resnet50_Best_model.keras"
+
 @st.cache_resource
 def load_model():
-    model = tf.keras.models.load_model('Final_Resnet50_Best_model.keras')
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    with st.spinner("Loading model... (first run downloads ~215 MB)"):
+        model_path = hf_hub_download(repo_id=HF_REPO_ID, filename=HF_FILENAME)
+        model = tf.keras.models.load_model(model_path)
+    face_cascade = cv2.CascadeClassifier(
+        cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+    )
     return model, face_cascade
 
 model, face_cascade = load_model()
@@ -58,7 +67,6 @@ def detect_and_predict(image_array):
 
     return annotated, results, len(faces)
 
-# Input method
 tab1, tab2 = st.tabs(["📷 Camera", "🖼️ Upload Image"])
 
 with tab1:
