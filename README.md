@@ -1,47 +1,41 @@
-# Emotion Detection from Scratch
+# Emotion Detection — Model Comparison
 
-Deep learning pipeline to classify facial expressions into 7 emotions using the FER-2013 dataset.
+Side-by-side comparison of a custom ResNet50 trained on FER-2013 vs DeepFace (pre-trained on AffectNet+).
 
-**Live demo:** *(add Streamlit Cloud URL here once deployed)*
+**Live demo:** https://mathursuchit-emotion-detection.streamlit.app/
 
-## Overview
+## What it does
 
-Builds and compares three deep learning approaches:
-1. **Custom CNN** — baseline model trained from scratch
-2. **CNN + Image Augmentation** — improved generalization
-3. **ResNet50 Transfer Learning** — best performance using ImageNet pre-trained weights
+Upload a photo or use your webcam — the app runs both models simultaneously and shows you the predicted emotion, confidence score, and probability breakdown for each.
 
-## Dataset
+The point isn't just to detect emotions. It's to show what happens when you train on a small, noisy dataset (FER-2013) vs a large, curated one (AffectNet+). The gap in real-world performance is significant.
 
-[FER-2013](https://www.kaggle.com/datasets/msambare/fer2013) — 35,000+ grayscale face images (48x48px), 7 emotion classes: Angry, Disgust, Fear, Happy, Neutral, Sad, Surprise.
+## Models
 
-## Results
+**My model (ResNet50)** — trained from scratch on FER-2013 (35K images, 48×48 grayscale, webcam-scraped). Weights hosted on HuggingFace, loaded at runtime.
 
-| Model | Validation Accuracy |
-|-------|-------------------|
-| Custom CNN | ~55% |
-| CNN + Augmentation | ~58% |
-| ResNet50 (Transfer Learning) | ~65% |
+**DeepFace** — pre-trained on AffectNet (450K+ images), RAF-DB, and others. Much more robust in real-world conditions.
 
-## Run Locally
+## Why FER-2013 is hard
+
+- Images are 48×48 grayscale and scraped from Google — noisy by nature
+- Human annotators only agree ~65% of the time on the correct label
+- Heavy class imbalance (Happy is overrepresented; Disgust has <800 samples)
+- Real-world faces look very different from the training distribution
+
+Despite these constraints, the custom model demonstrates the full pipeline: transfer learning, class imbalance handling, and deployment on free Kaggle GPU.
+
+## Run locally
 
 ```bash
 pip install -r requirements.txt
-jupyter notebook notebook.ipynb   # train models
-streamlit run app.py               # launch app
+streamlit run app.py
 ```
 
-## Features
+## Stack
 
-- Real-time emotion detection via webcam (browser-based)
-- Image upload support
-- Confidence scores and probability breakdown per emotion
-- Face bounding boxes with OpenCV Haar Cascade
-
-## Tech Stack
-
-Python · TensorFlow/Keras · ResNet50 · OpenCV · Streamlit · Jupyter
+Python · TensorFlow/Keras · ResNet50 · DeepFace · OpenCV · Streamlit · HuggingFace
 
 ## Author
 
-**Suchit Mathur** — [LinkedIn](https://www.linkedin.com/in/mathursuchit/) | [Email](mailto:suchitmathur96@gmail.com)
+Suchit Mathur — [LinkedIn](https://www.linkedin.com/in/mathursuchit/)
