@@ -9,9 +9,9 @@ from tensorflow.keras import layers, models
 from huggingface_hub import hf_hub_download
 from deepface import DeepFace
 
-st.set_page_config(page_title="Emotion Detector", page_icon="😊", layout="wide")
+st.set_page_config(page_title="Emotion Detector", page_icon=None, layout="wide")
 
-st.title("😊 Emotion Detection: Model Comparison")
+st.title("Emotion Detection: Model Comparison")
 st.markdown(
     "A side-by-side comparison of a **custom-trained ResNet50** (trained from scratch on FER-2013) "
     "vs **DeepFace** (pre-trained on AffectNet + multiple large-scale datasets)."
@@ -42,13 +42,13 @@ with st.expander("About this project", expanded=False):
 
 EMOTION_LABELS = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
 EMOTION_COLORS = {
-    'happy':    '🟡', 'Happy':    '🟡',
-    'neutral':  '⚪', 'Neutral':  '⚪',
-    'sad':      '🔵', 'Sad':      '🔵',
-    'angry':    '🔴', 'Angry':    '🔴',
-    'fear':     '🟠', 'Fear':     '🟠',
-    'disgust':  '🟢', 'Disgust':  '🟢',
-    'surprise': '🟣', 'Surprise': '🟣',
+    'happy':    '', 'Happy':    '',
+    'neutral':  '', 'Neutral':  '',
+    'sad':      '', 'Sad':      '',
+    'angry':    '', 'Angry':    '',
+    'fear':     '', 'Fear':     '',
+    'disgust':  '', 'Disgust':  '',
+    'surprise': '', 'Surprise': '',
 }
 
 HF_REPO_ID = "mathursuchit/emotion-detection"
@@ -149,30 +149,30 @@ def show_results(col_custom, col_deepface, image_array):
     ann_deepface, res_deepface, n_deepface = predict_deepface(image_array)
 
     with col_custom:
-        st.markdown("#### 🟠 My Model (ResNet50 on FER-2013)")
+        st.markdown("#### My Model (ResNet50 on FER-2013)")
         st.image(ann_custom, use_container_width=True)
         if n_custom == 0:
             st.warning("No faces detected.")
         else:
             for i, r in enumerate(res_custom):
                 emoji = EMOTION_COLORS.get(r['emotion'], '⚪')
-                st.subheader(f"Face {i+1}: {emoji} {r['emotion']} ({r['confidence']:.0%})")
+                st.subheader(f"Face {i+1}: {r['emotion']} ({r['confidence']:.0%})")
                 probs = dict(sorted(r['probabilities'].items(), key=lambda x: x[1], reverse=True))
                 st.bar_chart(probs)
 
     with col_deepface:
-        st.markdown("#### 🔵 DeepFace (Pre-trained on AffectNet+)")
+        st.markdown("#### DeepFace (Pre-trained on AffectNet+)")
         st.image(ann_deepface, use_container_width=True)
         if n_deepface == 0:
             st.warning("No faces detected.")
         else:
             for i, r in enumerate(res_deepface):
                 emoji = EMOTION_COLORS.get(r['emotion'], '⚪')
-                st.subheader(f"Face {i+1}: {emoji} {r['emotion']} ({r['confidence']:.0%})")
+                st.subheader(f"Face {i+1}: {r['emotion']} ({r['confidence']:.0%})")
                 probs = dict(sorted(r['probabilities'].items(), key=lambda x: x[1], reverse=True))
                 st.bar_chart(probs)
 
-tab1, tab2 = st.tabs(["📷 Camera", "🖼️ Upload Image"])
+tab1, tab2 = st.tabs(["Camera", "Upload Image"])
 
 with tab1:
     camera_image = st.camera_input("Take a photo")
